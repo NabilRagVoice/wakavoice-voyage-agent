@@ -271,16 +271,15 @@ Retourne liste des hôtels disponibles avec prix.""",
             "check_out_date": {"type": "string", "description": "Date de départ (YYYY-MM-DD)"},
             "adults": {"type": "integer", "description": "Nombre d'adultes par chambre"},
             "rooms": {"type": "integer", "description": "Nombre de chambres souhaitées"},
-            "hotel_name": {"type": "string", "description": "Nom d'hôtel spécifique (optionnel)"},
             "max_results": {"type": "integer", "description": "Nombre maximum de résultats"}
         },
         "required": ["city_code", "check_in_date", "check_out_date"]
     }
 )
-def search_hotels(city_code: str, check_in_date: str, check_out_date: str, adults: int = 1, rooms: int = 1, hotel_name: str = None, max_results: int = 5):
+def search_hotels(city_code: str, check_in_date: str, check_out_date: str, adults: int = 1, rooms: int = 1, max_results: int = 5):
     return tool_hotel_search.search_hotels(
         city_code=city_code, check_in_date=check_in_date, check_out_date=check_out_date,
-        adults=adults, rooms=rooms, hotel_name=hotel_name, max_results=max_results
+        adults=adults, rooms=rooms, max_results=max_results
     )
 
 
@@ -341,18 +340,17 @@ LIGNES URBAINES SOTRACO:
 4: Tampouy ↔ Gounghin
 5: Pissy ↔ CHU Yalgado
 
-LIGNES INTERURBAINES: Ouagadougou ↔ Bobo-Dioulasso, Koudougou""",
+TYPES: urban (SOTRACO), intercity (interurbain)""",
     parameters={
         "properties": {
-            "line_number": {"type": "string", "description": "Numéro de ligne SOTRACO (1-5) pour les bus urbains"},
-            "from_city": {"type": "string", "description": "Ville de départ pour les trajets interurbains"},
-            "to_city": {"type": "string", "description": "Ville d'arrivée pour les trajets interurbains"}
+            "line_number": {"type": "string", "description": "Numéro de ligne SOTRACO (1-5) ou 'all' pour toutes"},
+            "type": {"type": "string", "description": "Type de transport: 'urban' (défaut) ou 'intercity'"}
         },
         "required": []
     }
 )
-def get_bus_schedule(line_number: str = None, from_city: str = None, to_city: str = None):
-    return tool_bus_schedule.execute({"line_number": line_number, "from_city": from_city, "to_city": to_city})
+def get_bus_schedule(line_number: str = "all", type: str = "urban"):
+    return tool_bus_schedule.execute({"line_number": line_number, "type": type})
 
 
 # =============================================================================
